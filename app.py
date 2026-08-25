@@ -154,4 +154,4 @@ if uploaded_files:
             st.markdown("---")
             
             total_sum = format_indian_style(int(all_files_transactions))     
-            st.header(f"GRAND TOTAL for all files: ₹{total_sum}")
+            st.header(f":green[GRAND TOTAL] for all files: :red[₹{total_sum}]")
