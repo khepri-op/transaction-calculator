@@ -24,7 +24,7 @@ if st.session_state.error_message:
 # Notice the "key" argument. This is how we force it to clear later.
 uploaded_files = st.file_uploader(
     "Tap here to select CSVs", 
-    type="csv", 
+    type=["csv", "txt", "xlsx"], 
     accept_multiple_files=True,
     key=f"uploader_{st.session_state.uploader_key}"
 )
