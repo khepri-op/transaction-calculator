@@ -29,18 +29,30 @@ uploaded_files = st.file_uploader(
     key=f"uploader_{st.session_state.uploader_key}"
 )
 
-def get_date_range(date_list):
+def get_date_range(_date_list):
     """Retrive the date objects of the start and end of the transactions and format them to a name
     so it can be used as a filename"""
+
+    month = ""
     
-    #Get the start and end date objects
+    # Remove duplicates
+    date_list = list(dict.fromkeys(_date_list)) 
+       
+    # Get the start and end date objects
     start_date = datetime.strptime(date_list[0], "%Y-%m-%d %H:%M:%S")
     end_date = datetime.strptime(date_list[-1], "%Y-%m-%d %H:%M:%S")
     
-    #Store them in a neatly formatted string. eg - August 16 2026
+    # Find out if the date range corresponds exactly to a month
+    if (start_date.month == end_date.month) and ((end_date.day - start_date.day) in [30, 29, 28, 27]):
+        month = start_date.strftime("%B")
+    else:
+        month = 'none'
+    
+    # Store them in a neatly formatted string. eg - August 16 2026
     date_range = {
         'start': f"{start_date.strftime("%b")}-{start_date.day}-{start_date.year}",
-        'end': f"{end_date.strftime("%b")}-{end_date.day}-{end_date.year}"
+        'end': f"{end_date.strftime("%b")}-{end_date.day}-{end_date.year}",
+        'month': month,
     }
     return date_range
     
@@ -76,7 +88,8 @@ def extract_csv(csv_file):
     information = {
         'start': date_range['start'],
         'end': date_range['end'],
-        'total': add_transactions(transactions)
+        'month': date_range['month'],
+        'total': add_transactions(transactions),
     }
     
     #Return the dict full of info 
@@ -139,8 +152,11 @@ if uploaded_files:
                     info = extract_csv(csv_file=file)
                     
                     # Form a clean name for the file
-                    clean_name = f":orange[{info['start']}] ➡️ :orange[{info['end']}]"
-                    
+                    if info['month'] != 'none':
+                        clean_name = f":orange[{info['month']}]"
+                    else:
+                        clean_name = f":orange[{info['start']}] ➡️ :orange[{info['end']}]"
+                         
                     total = int(info['total'])
                     # Big text for individual files
                     st.subheader(f"📄 {clean_name} Total: :red[₹{format_indian_style(total)}]")
