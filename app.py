@@ -16,7 +16,7 @@ st.write("Upload your BharatPe CSV files below to calculate the total.")
 # --- Display the Error Message ---
 # If we just cleared invalid files, this will show a warning
 if st.session_state.error_message:
-    st.error("⚠️ Invalid files detected! The upload box has been cleared. Please upload valid PDF statements only.")
+    st.error("⚠️ Invalid files detected! The upload box has been cleared. Please upload valid CSV statements only.")
     st.session_state.error_message = False # Reset it so it disappears next time
 
 
